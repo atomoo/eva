@@ -48,8 +48,10 @@ export default class Eva {
             const model = models[key]
             const modelInitialState = model.state
             this.appReducer[key] = function reducer(state = modelInitialState, {type, payload}) {
-                if (model.reducer[type]) {
-                    return model.reducer[type](state, {type, payload})
+                // dispatch({type: 'posts.postsByReddit})
+                const modelAndReducer = type.split('.')
+                if (modelAndReducer.length === 2 && modelAndReducer[0] === key && model.reducer[modelAndReducer[1]]) {
+                    return model.reducer[modelAndReducer[1]](state, {type, payload})
                 }
                 return state
             }
