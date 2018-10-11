@@ -37,9 +37,11 @@ export default class Eva {
 
     appEffect = {}
 
+    effectActions = []
+
     loadModel(models) {
         if (!models || !isObject(models)) {
-            throw new Error('model needs to be an Object')
+            throw new Error('models needs to be an Object')
         }
         Object.keys(models).forEach(key => {
             if (this.appReducer[key]) {
@@ -47,6 +49,7 @@ export default class Eva {
             }
             const model = models[key]
             const modelInitialState = model.state
+            // reducer
             this.appReducer[key] = function reducer(state = modelInitialState, {type, payload}) {
                 // dispatch({type: 'posts.postsByReddit})
                 const modelAndReducer = type.split('.')
@@ -54,6 +57,14 @@ export default class Eva {
                     return model.reducer[modelAndReducer[1]](state, {type, payload})
                 }
                 return state
+            }
+            // effect
+            if (model.effect && isObject(model.effect)) {
+                Object.keys(model.effect).forEach(effectName => {
+                    const effectActionType = `${key}.${effectName}`
+                    this.appEffect[effectActionType] = model.effect[effectName]
+                    this.effectActions.push(effectActionType)
+                })
             }
         })
     }

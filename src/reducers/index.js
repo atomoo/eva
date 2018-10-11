@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 import {
     SELECT_REDDIT,
     REQUEST_POSTS,
@@ -6,6 +6,7 @@ import {
 } from '../actions'
 
 function selectedReddit(state = 'reactjs', action) {
+    console.log('selectedReddit: ', action.type)
     switch (action.type) {
         case SELECT_REDDIT:
             return action.reddit
@@ -20,7 +21,7 @@ function posts(state = {
 }, action) {
     switch (action.type) {
         case REQUEST_POSTS:
-            return { ...state, isFetching: true }
+            return {...state, isFetching: true}
 
         case RECEIVE_POSTS:
             return {
@@ -35,6 +36,7 @@ function posts(state = {
 }
 
 function postsByReddit(state = {}, action) {
+    console.log('postsByReddit: ', action.type)
     switch (action.type) {
         case REQUEST_POSTS:
         case RECEIVE_POSTS:
