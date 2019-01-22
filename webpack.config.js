@@ -1,34 +1,58 @@
 const path = require('path')
 const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    devtool: 'cheap-module-eval-source-map',
+    devtool: 'cheap-source-map',
+    mode: 'development',
     entry: [
-        'webpack-hot-middleware/client?reload=true',
-        path.join(__dirname, 'src', 'main'),
+        path.join(__dirname, 'src', 'Index.jsx'),
     ],
     output: {
         path: path.join(__dirname, 'dist'),
         filename: 'bundle.js',
-        publicPath: '/static/',
+        publicPath: '/',
     },
     plugins: [
-        new webpack.optimize.OccurenceOrderPlugin(),
+        new HtmlWebpackPlugin({
+            template: './index.html'
+        }),
+        new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin(),
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('development'),
         }),
     ],
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['.js', '.jsx']
+    },
+    devServer: {
+        contentBase: './dist',
+        port: 3000,
+        host: '0.0.0.0',
+        hot: true,
+        historyApiFallback: true,
+        disableHostCheck: true
     },
     module: {
-        loaders: [{
-            test: /\.jsx?$/,
-            loaders: ['babel'],
-            exclude: /node_modules/,
-            include: __dirname,
-        }],
+        rules: [
+            {
+                test: /\.js[x]?$/,
+                include: path.resolve(__dirname),
+                exclude: /node_modules/,
+                loader: 'babel-loader?cacheDirectory'
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'css-loader'
+                    },
+                ]
+            }
+        ]
     },
 }

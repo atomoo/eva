@@ -1,5 +1,5 @@
 {
-    "extends": "airbnb",
+    "extends": ["airbnb-base", "airbnb/rules/react"],
     "parser": "babel-eslint",
     "env": {
         "browser": true
@@ -17,9 +17,13 @@
             "SwitchCase": 1
         }],
         "max-len": ["error", 120],
+        "no-plusplus": "off",
         "object-curly-spacing": ["error", "never"],
         "semi": ["error", "never"],
         "react/jsx-indent": ["error", 4],
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }]
+        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+        "react/jsx-indent-props": ["error", 4],
+        "react/forbid-prop-types": "warn",
+        "import/no-extraneous-dependencies": "off"
     }
 }

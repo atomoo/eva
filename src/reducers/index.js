@@ -1,57 +1,23 @@
-import {combineReducers} from 'redux'
-import {
-    SELECT_REDDIT,
-    REQUEST_POSTS,
-    RECEIVE_POSTS
-} from '../actions'
-
-function selectedReddit(state = 'reactjs', action) {
-    console.log('selectedReddit: ', action.type)
+const todos = (state = [], action) => {
     switch (action.type) {
-        case SELECT_REDDIT:
-            return action.reddit
-        default:
-            return state
-    }
-}
-
-function posts(state = {
-    isFetching: false,
-    items: []
-}, action) {
-    switch (action.type) {
-        case REQUEST_POSTS:
-            return {...state, isFetching: true}
-
-        case RECEIVE_POSTS:
-            return {
+        case 'ADD_TODO':
+            return [
                 ...state,
-                isFetching: false,
-                items: action.posts,
-                lastUpdated: action.receivedAt
-            }
+                {
+                    id: action.id,
+                    text: action.text,
+                    completed: false
+                }
+            ]
+        case 'TOGGLE_TODO':
+            return state.map(todo => {
+                return (todo.id === action.id)
+                    ? {...todo, completed: !todo.completed}
+                    : todo
+            })
         default:
             return state
     }
 }
 
-function postsByReddit(state = {}, action) {
-    console.log('postsByReddit: ', action.type)
-    switch (action.type) {
-        case REQUEST_POSTS:
-        case RECEIVE_POSTS:
-            return {
-                ...state,
-                [action.reddit]: posts(state[action.reddit], action)
-            }
-        default:
-            return state
-    }
-}
-
-const rootReducer = combineReducers({
-    postsByReddit,
-    selectedReddit
-})
-
-export default rootReducer
+export default todos
